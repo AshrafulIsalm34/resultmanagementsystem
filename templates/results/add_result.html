@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Student Result</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding:0;
+        }
+        .container {
+            max-width: 700px;
+            margin: 20px auto;
+            background: #eef0f3;
+            border-radius: 12px;
+            padding: 35px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.06);
+        }
+        h2, h3 { text-align: center; color: #1f2937; }
+        form { display: flex; flex-direction: column; gap: 10px; }
+        label { font-weight: 500; margin-bottom: 5px; display: block; color: #374151; }
+        input, select {
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            width: 100%;
+            font-size: 1rem;
+            transition: border 0.2s;
+        }
+        input:focus, select:focus { border-color: #3b82f6; outline: none; }
+        button {
+            padding: 14px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            font-size: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover { background: #2563eb; }
+        .subject-group {
+            background-color: #f3f4f6;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .custom-subject { display: none; margin-top: 10px; }
+        .back-link {
+            text-decoration: none;
+            color: #6b7280;
+            display: inline-block;
+            margin-top: 25px;
+            transition: color 0.3s;
+        }
+        .back-link:hover { color: #374151; }
+        .remove-btn {
+            background: #ef4444;
+            margin-top: 10px;
+        }
+
+        .navbar {
+            background-color: #2d3748;
+            padding: 15px 30px;
+            color: white;
+            font-size: 18px;
+        }
+
+        .navbar a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="{% url 'dashboard' %}">🏠 Home</a>
+    </div>
+
+<div class="container">
+    <h2>Add Student Result</h2>
+    <form method="POST" novalidate>
+        {% csrf_token %}
+
+        <h3>Student Info</h3>
+        {{ student_form.as_p }}
+
+        <h3>Subjects & Marks</h3>
+        <div id="subject-container">
+            <div class="subject-group">
+                <label>Subject name:</label>
+                <select name="subjects_name" class="subject-select" onchange="toggleCustomSubject(this)">
+                    <option value="Math">Math</option>
+                    <option value="Logic Design">Logic Design</option>
+                    <option value="EEE ">EEE</option>
+                    <option value="Object Orented Programming">Object Orented Programming</option>
+                </select>
+
+                <input type="text" name="custom_subject" class="custom-subject" placeholder="Enter custom subject" />
+
+                <label>Marks:</label>
+                <input type="number" name="marks" placeholder="Enter marks" />
+
+                <button type="button" class="remove-btn" onclick="removeSubject(this)">Remove</button>
+            </div>
+        </div>
+
+        <button type="button" onclick="addSubject()">+ Add Subject</button>
+        <button type="submit">Submit Result</button>
+    </form>
+</div>
+
+<script>
+function toggleCustomSubject(select) {
+    const customInput = select.parentElement.querySelector('.custom-subject');
+    if (select.value === 'custom') {
+        customInput.style.display = 'block';
+    } else {
+        customInput.style.display = 'none';
+        customInput.value = '';
+    }
+}
+
+function addSubject() {
+    const container = document.getElementById('subject-container');
+    const group = container.querySelector('.subject-group');
+    const clone = group.cloneNode(true);
+
+    clone.querySelector('select').value = 'Math';
+    clone.querySelector('.custom-subject').style.display = 'none';
+    clone.querySelector('.custom-subject').value = '';
+    clone.querySelector('[name="marks"]').value = '';
+
+    container.appendChild(clone);
+}
+
+function removeSubject(button) {
+    const group = button.parentElement;
+    const container = document.getElementById('subject-container');
+    if (container.children.length > 1) {
+        group.remove();
+    } else {
+        alert("At least one subject is required.");
+    }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,185 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Results</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+
+    <style>
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f8fa;
+            margin: 0;
+            padding:0 !important;
+        }
+
+        .navbar {
+            background-color: #2d3748;
+            padding: 15px 30px;
+            color: white;
+            font-size: 18px;
+        }
+
+        .navbar a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .search-section {
+            max-width: 500px;
+            margin: 40px auto;
+            background: #ffffff;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+        }
+
+        .search-section h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+        .search-section form label {
+            display: block;
+            margin-bottom: 6px;
+            color: #444;
+        }
+
+        .search-section input[type="text"],
+        .search-section select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        .search-section button {
+            width: 100%;
+            background-color: #3182ce;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .search-section button:hover {
+            background-color: #2c5282;
+        }
+
+        .search-section form label {
+            display: block;
+            margin-bottom: 6px;
+            color: #444;
+            font-weight: 600;
+        }
+
+        .search-section input[type="text"],
+        .search-section select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 15px;
+        }
+
+        .cards-container{
+                display: flex;
+                flex-wrap: wrap;
+                gap: 15px;
+                justify-content: center;  
+        }
+
+    </style>
+</head>
+ 
+<body>
+    <div class="navbar">
+        <a href="{% url 'dashboard' %}">🏠 Home</a>
+    </div>
+
+    <div class="search-section">
+    <form id="studentSearchForm" method="post">
+        {% csrf_token %}
+        <label for="student_id">🎓 Student ID</label>
+        <input type="text" id="student_id" name="student_id" placeholder="Enter Student ID" required>
+
+        <label for="semester">📘 Semester</label>
+        <select id="semester" name="semester" required>
+            <option value="">-- Select Semester --</option>
+            <option value="Spring 2025">Spring 2025</option>
+            <option value="Summer 2025">Summer 2025</option>
+            <option value="Fall 2025">Fall 2025</option>
+            <option value="Spring 2024">Spring 2024</option>
+            <option value="Summer 2024">Summer 2024</option>
+            <option value="Fall 2024">Fall 2024</option>
+            <option value="Spring 2026">Spring 2026</option>
+            <option value="Summer 2026">Summer 2026</option>
+            <option value="Fall 2026">Fall 2026</option>
+        </select>
+        <button type="submit">Search</button>
+    </form>
+    </div>
+
+    <div id="cardsContainer" class="cards-container">
+        <!-- Dynamic student cards will appear here -->
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.getElementById("studentSearchForm");
+            const cardsContainer = document.getElementById("cardsContainer");
+
+            // Load saved cards from localStorage
+            const savedCards = JSON.parse(localStorage.getItem("studentCards") || "[]");
+            savedCards.forEach(card => {
+                cardsContainer.innerHTML += card;
+            });
+
+            form.addEventListener("submit", function (e) {
+                e.preventDefault();
+                const formData = new FormData(form);
+
+                fetch("", {
+                    method: "POST",
+                    body: formData,
+                    headers: { "X-Requested-With": "XMLHttpRequest" }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        cardsContainer.innerHTML += data.card_html;
+                        saveCardToLocalStorage(data.card_html);
+                        form.reset();  // Auto-clear form
+                    } else {
+                        alert(data.message);
+                    }
+                });
+            });
+
+            function saveCardToLocalStorage(html) {
+                let cards = JSON.parse(localStorage.getItem("studentCards") || "[]");
+                cards.push(html);
+                localStorage.setItem("studentCards", JSON.stringify(cards));
+            }
+
+            window.deleteCard = function (element) {
+                element.closest('.card').remove();
+                updateLocalStorage();
+            }
+
+            function updateLocalStorage() {
+                let allCards = document.querySelectorAll('.card');
+                let htmlCards = Array.from(allCards).map(card => card.outerHTML);
+                localStorage.setItem("studentCards", JSON.stringify(htmlCards));
+            }
+        });
+    </script>
+</body>
+</html>

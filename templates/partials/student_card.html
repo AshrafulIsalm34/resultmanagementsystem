@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load gpa_extras %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Result Card</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding:0;
+        }
+        /* Container to hold all cards */
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center !important;
+            gap: 20px;
+        }
+
+        .card {
+            position: relative;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 500px;
+            box-sizing: border-box;
+            transition: transform 0.2s;
+            margin-bottom: 10px;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #ff4d4f;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 30px;
+            text-align: center;
+        }
+
+        .card h3 {
+            margin-top: 0;
+            font-size: 22px;
+            color: #2c3e50;
+        }
+
+        .card p {
+            font-size: 16px;
+            color: #555;
+            margin: 8px 0;
+        }
+
+        .card p strong {
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        table th {
+            background-color: #f1f1f1;
+            color: #333;
+        }
+
+        /* Responsive behavior */
+        @media (max-width: 768px) {
+            .card {
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card-container">
+        <div class="card">
+            <button class="delete-btn" onclick="deleteCard(this)">✖</button>
+            <h3>{{ student.student_name }} - {{ student.semester }}</h3>
+            <p><strong>Student ID:</strong> {{ student.student_id }}</p>
+
+            <table>
+                <thead>
+                    <tr><th>Subject</th><th>Marks</th><th>GPA</th></tr>
+                </thead>
+                <tbody>
+                {% for subject in subjects %}
+                    <tr>
+                        <td>{{ subject.subject_name }}</td>
+                        <td>{{ subject.marks }}</td>
+                        <td>{{ subject.marks|get_gpa }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            <p><strong>Semester GPA:</strong> {{ semester_gpa }}</p>
+            <p><strong>Total CGPA:</strong> {{ cgpa }}</p>
+        </div>
+    </div>
+
+    <script>
+        function deleteCard(btn) {
+            btn.closest('.card').remove();
+        }
+    </script>
+
+</body>
+</html>
