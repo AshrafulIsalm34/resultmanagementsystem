@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: result_management
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn result_management.wsgi:application
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: result_management.settings
+      - key: PYTHON_VERSION
+        value: 3.13.5
