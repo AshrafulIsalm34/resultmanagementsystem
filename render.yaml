@@ -3,7 +3,7 @@ services:
     name: result_management
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn result_management.wsgi:application
+    startCommand: gunicorn result_management.wsgi:application --timeout 120
     envVars:
       - key: DJANGO_SETTINGS_MODULE
         value: result_management.settings
