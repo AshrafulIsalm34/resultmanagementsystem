@@ -12,12 +12,16 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
-
+from dotenv import load_dotenv
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = os.path.join(BASE_DIR,'templates')
 STATIC_DIR = os.path.join(BASE_DIR,'static')
+from decouple import config
+
+
 
 
 
@@ -30,7 +34,16 @@ SECRET_KEY = 'django-insecure-274and$2b&3#+-sw12e#o95gfnko3ym4k=3s)*ojicojg_5hsy
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+
+
+ENVIRONMENT = os.getenv('DJANGO_ENV', 'development')
+
+if ENVIRONMENT == 'development':
+    ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+else:
+    ALLOWED_HOSTS = ['https://resultmanagementsystem-y3w0.onrender.com']
+
+
 
 
 # Application definition
