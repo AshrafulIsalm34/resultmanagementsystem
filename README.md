@@ -12,12 +12,11 @@ This is a Django-based web application for managing and displaying student resul
 - View Result as Modern Stylish Cards (JS & CSS powered)
 - Per Subject GPA, Semester GPA, and Overall CGPA Calculation
 - Delete Individual Result Cards (with JS)
-- Export Results as PDF (per card)
 - Admin Panel for Full Control
 
 ## 🧱 Tech Stack
 
-- **Backend:** Django 5.2.x (Python 3.13)
+- **Backend:** Django 5.2.4 (Python 3.13.5)
 - **Frontend:** HTML, CSS, JavaScript (Vanilla)
 - **Database:** SQLite (Development)
 - **PDF Export:** xhtml2pdf / WeasyPrint / wkhtmltopdf (as per setup)
@@ -28,7 +27,7 @@ This is a Django-based web application for managing and displaying student resul
 ### 🔧 Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/result-management-system.git
+git clone https://github.com/AshrafulIslam34/result-management-system.git
 cd result-management-system
 ```
 
